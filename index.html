@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather main</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/css/fontello.css">
+</head>
+<body>
+    <div class="me">
+        <h1 >Mohadese zare
+            <ul>
+                <li><span class="icon-instagram-1"></span>Mohaddeseh.dev</li>
+                <li><span class="icon-linkedin"></span>Mohadsezare_web</li>
+                <li><span class="icon-github-circled"></span>Mohadsezare_web</li>
+            </ul>
+        </h1>
+    </div>
+    <div class="card">
+        <div class="search">
+            <input type="text" class="inp" placeholder="شهر مورد نظر را وارد کنید">
+            <button class="btn">
+                <div class="search-img">
+                    <img src="img/search.png">
+                </div>
+            </button>
+        </div>
+        <div class="error-message">
+            <p>نام شهر صحیح نیست!</p>
+        </div>
+        <div class="weather">
+            <img src="img/rain.png" class="weather-icon">
+            <h1 class="temp">17 &#8451</h1>
+            <h2 class="city">Tehran</h2>
+            <div class="detail">
+                <div class="col">
+                    <div class="detail-img">
+                        <img src="img/humidity.png">
+                    </div>
+                    <div>
+                        <p class="humidity">32%</p>
+                        <p class="detail-titel">رطوبت</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="detail-img">
+                        <img src="img/wind.png" alt="">
+                    </div>
+                    <div>
+                        <p class="wind">3 km/h</p>
+                        <p class="detail-titel">سرعت وزش باد</p>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+
+    <script>
+       const apiKey = '22f6dc48e2df21ef55558c55b64d66ce'
+       const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q='
+
+       const searchCity =document.querySelector('.inp')
+       const searchCBtn =document.querySelector('.btn')
+       const weatherIcon = document.querySelector('.weather-icon')
+
+       async function checkweather(cityName) {
+        const response = await fetch(apiUrl +cityName+ `&appid=${apiKey}`)  
+        let data = await response.json() 
+        
+
+      
+        if(response.status == 404){
+            document.querySelector('.error-message').style.display = 'block'
+            document.querySelector('.weather').style.height = '0'
+            document.querySelector('.weather').style.overflow = 'hidden'
+            document.querySelector('.weather').style.transition = 'all 1s'
+        }else{
+            document.querySelector('.error-message').style.display = 'none'
+            document.querySelector('.city').innerHTML = data.name
+            document.querySelector('.temp').innerHTML = Math.round(data.main.temp) +'&#8451'
+            document.querySelector('.humidity').innerHTML = data.main.humidity + ' %'
+            document.querySelector('.wind').innerHTML = data.wind.speed +' km/h'
+        
+        }
+        console.log(data);
+        
+        if(data.weather[0].main == 'Clouds'){
+            weatherIcon.src = 'img/clouds.png'
+        }else if(data.weather[0].main == 'Clear'){
+             weatherIcon.src = 'img/clear.png'
+        }else if(data.weather[0].main == 'rain'){
+             weatherIcon.src = 'img/rain.png'
+        }else if(data.weather[0].main == 'Mist'){
+             weatherIcon.src = 'img/mist.png'
+        }
+        
+        document.querySelector('.weather').style.height = '470px'
+        document.querySelector('.weather').style.transition = 'all 0.5s'
+       }
+
+       searchCBtn.addEventListener('click',()=>{
+        if(searchCity.value == ''){
+            document.querySelector('.weather').style.height = '0'
+            document.querySelector('.weather').style.overflow = 'hidden'
+            document.querySelector('.weather').style.transition = 'all 1s'
+        }else{
+            checkweather(searchCity.value)
+        }
+       })
+      
+      
+    </script>
+</body>
+</html>
